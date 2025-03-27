@@ -83,7 +83,7 @@ button {
   border: none;
   border-radius: 8px;
   padding: 8px 16px;
-  width: 120px;
+  min-width: 120px;
   height: 40px;
   background: #4e75ff;
   color: #fff;
@@ -98,6 +98,7 @@ button:hover {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 20px;
   gap: 24px;
 }
 
@@ -160,4 +161,22 @@ button:hover {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.load-more {
+  margin-bottom: 20px;
 }

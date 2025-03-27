@@ -7,19 +7,21 @@ export const params = {
   image_type: 'photo',
   orientation: 'horizontal',
   safesearch: true,
+  per_page: 15,
 };
 
-export function fetchSearchResult(query) {
-  return axios
-    .get('/', {
-      params: { ...params, q: query },
-    })
-    .then(resp => {
-      const hits = resp.data.hits;
-      return hits;
-    })
-    .catch(error => {
-      console.error(error);
-      return [];
+export async function fetchSearchResult(query, page = 1) {
+  try {
+    const response = await axios.get('/', {
+      params: { ...params, q: query, page },
     });
+
+    return {
+      images: response.data.hits,
+      totalResults: response.data.totalHits,
+    };
+  } catch (error) {
+    console.error(error);
+    return { images: [], totalResults: 0 };
+  }
 }

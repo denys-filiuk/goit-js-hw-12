@@ -1,7 +1,21 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-export async function renderSearchCard(images) {
+let lightboxInstance = null;
+
+export function initLightbox() {
+  if (!lightboxInstance) {
+    lightboxInstance = new SimpleLightbox('.gallery a', {
+      captions: true,
+      captionsData: 'alt',
+      captionPosition: 'bottom',
+      captionDelay: 250,
+    });
+  }
+  return lightboxInstance;
+}
+
+export async function renderSearchCard(images, lightbox) {
   if (!images.length) return;
 
   const gallery = document.querySelector('.gallery');
@@ -34,17 +48,5 @@ export async function renderSearchCard(images) {
 
   gallery.insertAdjacentHTML('beforeend', markup);
 
-  await new Promise(resolve => requestAnimationFrame(resolve));
-
-  let lightbox;
-  if (!lightbox) {
-    lightbox = new SimpleLightbox('.gallery a', {
-      captions: true,
-      captionsData: 'alt',
-      captionPosition: 'bottom',
-      captionDelay: 250,
-    });
-  } else {
-    lightbox.refresh();
-  }
+  lightbox.refresh();
 }

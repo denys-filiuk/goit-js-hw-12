@@ -1,9 +1,7 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import { fetchSearchResult } from './js/pixabay-api.js';
-import { renderSearchCard } from './js/render-functions.js';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import { renderSearchCard, initLightbox } from './js/render-functions.js';
 
 const form = document.querySelector('.form');
 const gallery = document.querySelector('.gallery');
@@ -13,6 +11,8 @@ const loadMore = document.querySelector('.load-more');
 let currentPage = 1;
 let totalPages = 0;
 let searchQuery = '';
+
+let lightbox = initLightbox();
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
@@ -47,7 +47,7 @@ form.addEventListener('submit', async event => {
         iconColor: '#FAFAFB',
       });
     } else {
-      renderSearchCard(images);
+      renderSearchCard(images, lightbox);
       totalPages = Math.ceil(totalResults / 15);
 
       if (currentPage < totalPages) {
@@ -72,13 +72,15 @@ form.addEventListener('submit', async event => {
 });
 
 loadMore.addEventListener('click', async () => {
-  currentPage += 1;
+  loadMore.classList.add('visually-hidden');
   loader.style.display = 'block';
+
+  currentPage += 1;
 
   try {
     const { images } = await fetchSearchResult(searchQuery, currentPage);
 
-    renderSearchCard(images);
+    renderSearchCard(images, lightbox);
 
     const firstCard = document.querySelector('.galleryCard');
     if (firstCard) {
@@ -96,6 +98,8 @@ loadMore.addEventListener('click', async () => {
         maxWidth: '400px',
         position: 'topRight',
       });
+    } else {
+      loadMore.classList.remove('visually-hidden');
     }
   } catch (error) {
     console.error('Error while retrieving more images:', error);
